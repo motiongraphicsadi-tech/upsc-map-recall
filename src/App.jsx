@@ -64,49 +64,46 @@ function App() {
   };
 
   const handleStateClick = (event) => {
-    if (gameOver) return;
-
-    const clickedState = event.target.getAttribute("name");
-    if (!clickedState) return;
-
-    const isCorrect = clickedState === question;
-    const element = event.target;
-    const originalFill = element.getAttribute("data-original-fill") || "#666";
-    element.setAttribute("data-original-fill", originalFill);
-
-    element.style.fill = isCorrect ? "#4CAF50" : "#ff4d4d";
-
-    window.setTimeout(() => {
-      element.style.fill = originalFill;
-    }, 350);
-
-    flashMessage(isCorrect ? "Correct ✅" : `Wrong ❌ You clicked ${clickedState}`);
-
-    const queueWithCurrent = isCorrect
-      ? [...wrongQueue]
-      : [...wrongQueue, question];
-
-    if (questionCount >= 10) {
-      setGameOver(true);
-      setWrongQueue(queueWithCurrent);
-      return;
-    }
-
-    let nextQuestion;
-    let nextQueue;
-
-    if (wrongQueue.length > 0) {
-      nextQuestion = wrongQueue[0];
-      nextQueue = queueWithCurrent.slice(1);
-    } else {
-      nextQuestion = pickRandomState(question);
-      nextQueue = queueWithCurrent;
-    }
-
-    setWrongQueue(nextQueue);
-    setQuestion(nextQuestion);
-    setQuestionCount((prev) => prev + 1);
-    setScore((prev) => (isCorrect ? prev + 1 : prev));
+	if (gameOver) return;
+  
+	const clickedState = event.target.getAttribute("name");
+	if (!clickedState) return;
+  
+	const isCorrect = clickedState === question;
+	const element = event.target;
+	const originalFill = element.getAttribute("data-original-fill") || "#666";
+  
+	element.setAttribute("data-original-fill", originalFill);
+	element.style.fill = isCorrect ? "#4CAF50" : "#ff4d4d";
+  
+	window.setTimeout(() => {
+	  element.style.fill = originalFill;
+	}, 350);
+  
+	if (!isCorrect) {
+	  flashMessage(`Wrong ❌ Try again`);
+	  return;
+	}
+  
+	flashMessage("Correct ✅");
+	setScore((prev) => prev + 1);
+  
+	if (questionCount >= 10) {
+	  setGameOver(true);
+	  return;
+	}
+  
+	let nextQuestion;
+  
+	if (wrongQueue.length > 0) {
+	  nextQuestion = wrongQueue[0];
+	  setWrongQueue((prev) => prev.slice(1));
+	} else {
+	  nextQuestion = pickRandomState(question);
+	}
+  
+	setQuestion(nextQuestion);
+	setQuestionCount((prev) => prev + 1);
   };
 
   return (
@@ -117,7 +114,7 @@ function App() {
       </header>
 
       <main className="map-shell">
-        <div className="map-hint">Pinch to zoom • Drag to pan</div>
+        
 
         {gameOver && (
           <div className="game-overlay">
@@ -130,6 +127,8 @@ function App() {
             </div>
           </div>
         )}
+
+
 
         <div className={`map-stage ${gameOver ? "locked" : ""}`}>
           <TransformWrapper initialScale={1} minScale={1} maxScale={4}>
@@ -328,16 +327,20 @@ function App() {
       </main>
 
       <footer className="hud">
-        <div className="hud-row">
-          <div className="question">Find: {question}</div>
-          <div className="score">Score: {score}</div>
-        </div>
+  <div className="question-call">
+    <div className="question-kicker">Find this state</div>
+    <div className="question-state">{question}</div>
+  </div>
 
-        <div className="hud-row secondary">
-          <div className="message">{message}</div>
-          <div className="session">Question: {questionCount} / 10</div>
-        </div>
-      </footer>
+  <div className="hud-row secondary">
+    <div className="message">{message}</div>
+
+    <div className="right-info">
+      <div className="score-pill">Score: {score}</div>
+      <div className="session">Question: {questionCount} / 10</div>
+    </div>
+  </div>
+</footer>
     </div>
   );
 }
