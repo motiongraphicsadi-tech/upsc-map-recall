@@ -342,6 +342,26 @@ button:active {
     border-radius: 14px;
   }
 
+  .question-call.blue {
+    background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+  }
+  
+  .question-call.green {
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+  }
+  
+  .question-call.red {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  }
+  
+  .intro-overlay {
+    z-index: 60;
+  }
+  
+  .intro-card {
+    min-width: min(90vw, 360px);
+  }
+
   .question-kicker {
     font-size: 0.62rem;
   }
@@ -447,4 +467,5 @@ button:active {
   .review-list {
     gap: 6px;
   }
+  
 }
